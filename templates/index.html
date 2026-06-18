@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws & Homes | Luxury Pet Adoption</title>
+    
+    <!-- Premium Font Pairing: Playfair Display (Serif) & Inter (Sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables for a cohesive color theme */
+        :root {
+            --bg-color: #FAF9F6;       /* Warm off-white */
+            --text-main: #292524;      /* Deep stone */
+            --text-muted: #78716C;     /* Soft grey */
+            --accent: #D97706;         /* Warm amber */
+            --accent-hover: #B45309;
+            --card-bg: #FFFFFF;
+            --radius-lg: 24px;
+            --radius-pill: 50px;
+            --shadow-soft: 0 20px 40px -15px rgba(0,0,0,0.05);
+            --shadow-hover: 0 25px 50px -12px rgba(0,0,0,0.12);
+        }
+
+        /* Base & Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Modern Split Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 80px 0 60px;
+            min-height: 80vh;
+        }
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+        }
+        .hero-title {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            color: var(--text-main);
+            margin-bottom: 24px;
+        }
+        .hero-title i { color: var(--accent); }
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        .hero-image {
+            flex: 1;
+            height: 600px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+        }
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Inline Search & Filter UI */
+        .filter-dock {
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: var(--radius-pill);
+            display: inline-flex;
+            align-items: center;
+            box-shadow: var(--shadow-soft);
+            gap: 8px;
+        }
+        .filter-dock select {
+            border: none;
+            background: #F5F5F4;
+            padding: 16px 24px;
+            border-radius: var(--radius-pill);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            border-radius: var(--radius-pill);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Section Typography */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin: 80px 0 40px;
+        }
+        .section-header h2 {
+            font-size: 2.8rem;
+        }
+        .view-all {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .view-all:hover { border-color: var(--accent); }
+
+        /* Premium Pet Grid */
+        .pet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 40px;
+            padding-bottom: 100px;
+        }
+
+        /* Elevated Card Design */
+        .pet-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            display: block;
+            position: relative;
+        }
+        .pet-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .card-img-wrapper {
+            position: relative;
+            height: 380px;
+            padding: 16px;
+        }
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: transform 0.6s ease;
+        }
+        .pet-card:hover .card-img-wrapper img {
+            transform: scale(1.03);
+        }
+
+        /* Status Pills overlay */
+        .pill-overlay {
+            position: absolute;
+            top: 32px;
+            left: 32px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            z-index: 10;
+        }
+
+        /* Card Information */
+        .card-info {
+            padding: 8px 24px 32px;
+        }
+        .pet-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .pet-name-row h3 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+        }
+        .pet-price {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .pet-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .pet-meta span {
+            display: flex;
+            align-items: center;
+        }
+        .pet-meta span::after {
+            content: "•";
+            margin-left: 12px;
+            color: #D6D3D1;
+        }
+        .pet-meta span:last-child::after { content: ""; }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 40px; }
+            .hero-content { margin: 0 auto; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .filter-dock { width: 100%; flex-direction: column; background: transparent; box-shadow: none; padding: 0; }
+            .filter-dock select, .filter-dock button { width: 100%; padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+    
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Find a friend <br><i>for life.</i></h1>
+                <p class="hero-subtitle">Experience the joy of pet adoption. We rescue, rehabilitate, and rehome the most wonderful companions waiting to meet you.</p>
+                
+                <div class="filter-dock">
+                    <select>
+                        <option value="any">Any Species</option>
+                        <option value="dog">Dogs</option>
+                        <option value="cat">Cats</option>
+                    </select>
+                    <select>
+                        <option value="any">Any Age</option>
+                        <option value="baby">Puppy / Kitten</option>
+                        <option value="adult">Adult</option>
+                        <option value="senior">Senior</option>
+                    </select>
+                    <button class="btn-primary">Search Pets</button>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1000&auto=format&fit=crop" alt="Happy dog with owner">
+            </div>
+        </section>
+
+        <!-- Pet Grid Section -->
+        <section>
+            <div class="section-header">
+                <h2>Waiting for you</h2>
+                <a href="/all-pets" class="view-all">View all companions &rarr;</a>
+            </div>
+            
+            <div class="pet-grid">
+                
+                <!-- Card 1 -->
+                <a href="/adopt/hazel" class="pet-card">
+                    <div class="card-img-wrapper">
+                        <div class="pill-overlay">Puppy</div>
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop" alt="Hazel the rescue dog">
+                    </div>
+                    <div class="card-info">
+                        <div class="pet-name-row">
+                            <h3>Hazel</h3>
+                            <span class="pet-price">Adopt</span>
+                        </div>
+                        <div class="pet-meta">
+                            <span>Female</span>
+                            <span>Spaniel Mix</span>
+                            <span>3 Months</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 2 -->
+                <a href="/adopt/winston" class="pet-card">
+                    <div class="card-img-wrapper">
+                        <div class="pill-overlay">Bonded Pair</div>
+                        <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=800&auto=format&fit=crop" alt="Winston the cat">
+                    </div>
+                    <div class="card-info">
+                        <div class="pet-name-row">
+                            <h3>Winston</h3>
+                            <span class="pet-price">Adopt</span>
+                        </div>
+                        <div class="pet-meta">
+                            <span>Male</span>
+                            <span>British Shorthair</span>
+                            <span>2 Years</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 3 -->
+                <a href="/adopt/charlie" class="pet-card">
+                    <div class="card-img-wrapper">
+                        <div class="pill-overlay" style="color: var(--accent);">Special Needs</div>
+                        <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?w=800&auto=format&fit=crop" alt="Charlie the dog">
+                    </div>
+                    <div class="card-info">
+                        <div class="pet-name-row">
+                            <h3>Charlie</h3>
+                            <span class="pet-price">Adopt</span>
+                        </div>
+                        <div class="pet-meta">
+                            <span>Male</span>
+                            <span>Labrador Retriever</span>
+                            <span>6 Years</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+    </div>
+
+    
+</body>
+</html>
+
+
+
+    

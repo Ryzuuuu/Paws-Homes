@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws & Homes | Contact Us</title>
+
+    <!-- Importing the premium fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #FAF9F6; color: #292524; -webkit-font-smoothing: antialiased; min-height: 100vh;">
+
+    <!-- Directly include the navbar here -->
+    {% include 'navbar.html' %}
+
+    <main style="max-width: 1280px; margin: 0 auto; padding: 80px 24px; box-sizing: border-box;">
+        
+        <!-- Page Header -->
+        <header style="text-align: center; max-width: 600px; margin: 0 auto 60px;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 3.5rem; color: #292524; margin: 0 0 16px 0;">
+                Get in <i style="color: #D97706; font-style: italic;">touch</i>
+            </h1>
+            <p style="font-size: 1.1rem; color: #78716C; margin: 0; line-height: 1.6;">
+                Whether you're looking to adopt, volunteer, or just have a question, we'd love to hear from you.
+            </p>
+        </header>
+
+        <!-- Main Contact Layout -->
+        <div style="display: flex; flex-wrap: wrap; background: #FFFFFF; border-radius: 24px; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05); overflow: hidden;">
+            
+            <!-- Left: Contact Form -->
+            <div style="flex: 1 1 500px; padding: 60px; box-sizing: border-box;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0 0 30px 0;">Send us a message</h3>
+                
+                <form action="/submit-contact" method="POST" style="margin: 0;">
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label for="name" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Jane Doe" required 
+                               style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label for="email" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="jane@example.com" required 
+                               style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label for="subject" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Subject</label>
+                        <select id="subject" name="subject" 
+                                style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; box-sizing: border-box;">
+                            <option value="adopt">I want to adopt a pet</option>
+                            <option value="volunteer">I want to volunteer</option>
+                            <option value="donate">Donation inquiry</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label for="message" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Your Message</label>
+                        <textarea id="message" name="message" placeholder="How can we help you today?" required 
+                                  style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; min-height: 150px; resize: vertical; box-sizing: border-box;"></textarea>
+                    </div>
+
+                    <button type="submit" 
+                            style="background: #D97706; color: white; border: none; padding: 16px 40px; border-radius: 50px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 10px;">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Contact Information -->
+            <div style="flex: 1 1 400px; background: #292524; color: white; padding: 60px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+                <div>
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: #D97706; margin: 0 0 12px 0; font-weight: 600;">Visit Our Shelter</h4>
+                        <p style="font-size: 1.1rem; color: #E7E5E4; line-height: 1.8; margin: 0;">
+                            123 Rescue Road<br>
+                            Compassion City, CA 90210
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: #D97706; margin: 0 0 12px 0; font-weight: 600;">Contact Details</h4>
+                        <p style="font-size: 1.1rem; color: #E7E5E4; line-height: 1.8; margin: 0;">
+                            hello@pawsandhomes.org<br>
+                            +1 (555) 123-4567
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: #D97706; margin: 0 0 12px 0; font-weight: 600;">Adoption Hours</h4>
+                        <p style="font-size: 1.1rem; color: #E7E5E4; line-height: 1.8; margin: 0;">
+                            Monday - Friday: 10am - 6pm<br>
+                            Saturday - Sunday: 9am - 4pm
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Decorative Image -->
+                <img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?w=800&auto=format&fit=crop" alt="Happy dog looking up" 
+                     style="width: 100%; height: 250px; border-radius: 16px; object-fit: cover; margin-top: auto; opacity: 0.9;">
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
+

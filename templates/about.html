@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws & Homes | About Us</title>
+
+    <!-- Premium Font Pairing: Playfair Display (Serif) & Inter (Sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Variables matching the brand identity */
+        :root {
+            --bg-color: #FAF9F6;       /* Warm off-white */
+            --text-main: #292524;      /* Deep stone */
+            --text-muted: #78716C;     /* Soft grey */
+            --accent: #D97706;         /* Warm amber */
+            --accent-hover: #B45309;
+            --card-bg: #FFFFFF;
+            --radius-lg: 24px;
+            --radius-pill: 50px;
+            --shadow-soft: 0 20px 40px -15px rgba(0,0,0,0.05);
+            --shadow-hover: 0 25px 50px -12px rgba(0,0,0,0.12);
+        }
+
+        /* Base & Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+        .page-header h1 {
+            font-size: 4rem;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        .page-header h1 i { color: var(--accent); }
+        .page-header p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        /* Hero Image */
+        .about-hero-img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 40px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 80px;
+        }
+
+        /* Split Section (Mission & Story) */
+        .split-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+        .split-content h2 {
+            font-size: 2.8rem;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+        .split-content p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        .split-image {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Reverse Layout for alternating sections */
+        .split-section.reverse {
+            grid-template-columns: 1fr 1fr;
+            direction: rtl;
+        }
+        .split-section.reverse > * {
+            direction: ltr;
+        }
+
+        /* Values Section */
+        .values-section {
+            text-align: center;
+            padding: 80px 0;
+            background: var(--card-bg);
+            border-radius: 40px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 80px;
+        }
+        .values-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            padding: 0 60px;
+        }
+        .value-card h3 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .value-card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Call to Action */
+        .cta-section {
+            text-align: center;
+            padding: 60px 24px;
+        }
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 24px;
+        }
+        .btn-primary {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(217, 119, 6, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .split-section, .split-section.reverse {
+                grid-template-columns: 1fr;
+            }
+            .values-grid {
+                grid-template-columns: 1fr;
+                padding: 0 24px;
+            }
+            .about-hero-img {
+                height: 350px;
+            }
+            .page-header h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <main class="container">
+        
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1>Our <i>purpose</i> is <br>their future.</h1>
+            <p>Paws & Homes was founded on a simple belief: every animal deserves a loving, safe, and permanent home. We are dedicated to rescuing, rehabilitating, and rehoming pets in need.</p>
+        </header>
+
+        <!-- Cinematic Hero Image -->
+        <img src="https://images.unsplash.com/photo-1444212477490-ca407925329e?w=1600&auto=format&fit=crop" alt="Dogs running happily in a field" class="about-hero-img">
+
+        <!-- Mission Section -->
+        <section class="split-section">
+            <div class="split-content">
+                <h2>Our Mission</h2>
+                <p>We believe that compassion changes lives. Since our founding, Paws & Homes has worked tirelessly to pull vulnerable animals from high-kill shelters and dangerous situations on the streets.</p>
+                <p>Our dedicated team of volunteers and veterinarians provide immediate medical care, behavioral rehabilitation, and a safe haven until they are ready to meet their forever families.</p>
+            </div>
+            <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=800&auto=format&fit=crop" alt="Volunteer holding a puppy" class="split-image">
+        </section>
+
+        <!-- Approach Section (Reversed) -->
+        <section class="split-section reverse">
+            <div class="split-content">
+                <h2>The Matchmaking Process</h2>
+                <p>We don't just find homes; we find the <i>right</i> homes. Our adoption process is carefully designed to ensure compatibility between the pet's personality and the adopter's lifestyle.</p>
+                <p>By taking the time to understand the unique needs of every animal and human who walks through our doors, we boast a 98% permanent placement success rate.</p>
+            </div>
+            <img src="https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?w=800&auto=format&fit=crop" alt="Cat sleeping peacefully" class="split-image">
+        </section>
+
+        <!-- Core Values -->
+        <section class="values-section">
+            <h2>What We Stand For</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <h3>Compassion</h3>
+                    <p>We treat every animal with the kindness, dignity, and respect they deserve, regardless of their past or medical condition.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Integrity</h3>
+                    <p>We maintain full transparency with our adopters, providing honest assessments of an animal's health, temperament, and history.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Community</h3>
+                    <p>We believe animal welfare is a collective effort. We actively educate and support our community to foster responsible pet ownership.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <h2>Ready to change a life?</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Browse our available companions or reach out to see how you can help.</p>
+            <a href="/adopt" class="btn-primary">Meet Our Pets</a>
+        </section>
+
+    </main>
+
+</body>
+</html>
+
