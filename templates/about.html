@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paws & Homes | About Us</title>
+{% extends "base.html" %}
+{% block title %}Paws &amp; Homes | About Us{% endblock %}
 
-    <!-- Premium Font Pairing: Playfair Display (Serif) & Inter (Sans-serif) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-
+{% block head %}
     <style>
         /* CSS Variables matching the brand identity */
         :root {
@@ -27,13 +19,7 @@
 
         /* Base & Reset */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            -webkit-font-smoothing: antialiased;
-            line-height: 1.6;
-        }
+        body { line-height: 1.6; }
         h1, h2, h3 { font-family: 'Playfair Display', serif; }
 
         /* Container */
@@ -181,9 +167,9 @@
             }
         }
     </style>
-</head>
-<body>
-    {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
     <main class="container">
         
         <!-- Page Header -->
@@ -238,11 +224,9 @@
         <section class="cta-section">
             <h2>Ready to change a life?</h2>
             <p style="color: var(--text-muted); font-size: 1.1rem;">Browse our available companions or reach out to see how you can help.</p>
-            <a href="/adopt" class="btn-primary">Meet Our Pets</a>
+            <a href="{{ url_for('adopt') }}" class="btn-primary">Meet Our Pets</a>
         </section>
 
     </main>
-
-</body>
-</html>
+{% endblock %}
 

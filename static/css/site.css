@@ -1,0 +1,63 @@
+/* Shared styles: page base and the site navigation. Page-specific styles live in each template. */
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #FAF9F6;
+    color: #292524;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+:focus-visible {
+    outline: 2px solid #D97706;
+    outline-offset: 2px;
+}
+
+/* Navigation */
+.site-nav {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E7E5E4;
+}
+.site-nav__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+}
+.site-nav__brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #292524;
+    text-decoration: none;
+}
+.site-nav__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.site-nav__links a {
+    display: block;
+    padding: 8px 16px;
+    border-radius: 50px;
+    color: #78716C;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s, background-color 0.2s;
+}
+.site-nav__links a:hover {
+    color: #292524;
+    background: #F5F5F4;
+}
+.site-nav__links a.is-active {
+    color: #D97706;
+    background: #FEF3C7;
+}

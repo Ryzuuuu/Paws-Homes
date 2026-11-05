@@ -1,23 +1,10 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('about') }}">About</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+<nav class="site-nav" aria-label="Main">
+    <div class="site-nav__inner">
+        <a class="site-nav__brand" href="{{ url_for('index') }}">&#128062; Paws &amp; Homes</a>
+        <ul class="site-nav__links">
+            {% for endpoint, label in [('index', 'Home'), ('adopt', 'Adopt'), ('about', 'About'), ('contact', 'Contact')] %}
+            <li><a href="{{ url_for(endpoint) }}"{% if request.endpoint == endpoint %} class="is-active" aria-current="page"{% endif %}>{{ label }}</a></li>
+            {% endfor %}
         </ul>
-    </nav>
-
-    
-    
-
-</body>
-</html>
+    </div>
+</nav>
