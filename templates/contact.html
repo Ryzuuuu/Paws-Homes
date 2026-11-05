@@ -1,99 +1,149 @@
 {% extends "base.html" %}
 {% block title %}Paws &amp; Homes | Contact Us{% endblock %}
 
+{% block head %}
+    <style>
+        .contact-page { max-width: 1280px; margin: 0 auto; padding: 80px 24px; box-sizing: border-box; }
+        .contact-header { text-align: center; max-width: 600px; margin: 0 auto 60px; }
+        .contact-header h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: #292524; margin: 0 0 16px 0; }
+        .contact-header h1 i { color: #D97706; font-style: italic; }
+        .contact-header p { font-size: 1.1rem; color: #78716C; margin: 0; line-height: 1.6; }
+
+        .contact-card {
+            display: flex; flex-wrap: wrap; background: #FFFFFF; border-radius: 24px;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05); overflow: hidden;
+        }
+        .contact-form { flex: 1 1 500px; padding: 60px; box-sizing: border-box; }
+        .contact-form h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0 0 30px 0; }
+
+        .notice { padding: 16px 20px; border-radius: 16px; margin-bottom: 24px; font-weight: 500; }
+        .notice--success { background: #ECFDF5; color: #065F46; }
+        .notice--error { background: #FEF2F2; color: #991B1B; }
+
+        .field { margin-bottom: 24px; }
+        .field label { display: block; font-weight: 500; margin-bottom: 8px; color: #292524; }
+        .field input, .field select, .field textarea {
+            width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px;
+            font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; box-sizing: border-box;
+        }
+        .field textarea { min-height: 150px; resize: vertical; }
+        .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #D97706; background: #FFFFFF; }
+        .field.has-error input, .field.has-error select, .field.has-error textarea { border-color: #DC2626; }
+        .field__error { color: #B91C1C; font-size: 0.9rem; margin: 6px 0 0; }
+
+        .btn-submit {
+            background: #D97706; color: white; border: none; padding: 16px 40px; border-radius: 50px;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer;
+            width: 100%; margin-top: 10px; transition: background 0.3s;
+        }
+        .btn-submit:hover { background: #B45309; }
+
+        .contact-info {
+            flex: 1 1 400px; background: #292524; color: white; padding: 60px; display: flex;
+            flex-direction: column; justify-content: space-between; box-sizing: border-box;
+        }
+        .contact-info__block { margin-bottom: 40px; }
+        .contact-info h3 {
+            font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+            font-size: 0.85rem; color: #D97706; margin: 0 0 12px 0; font-weight: 600;
+        }
+        .contact-info p { font-size: 1.1rem; color: #E7E5E4; line-height: 1.8; margin: 0; }
+        .contact-info img {
+            width: 100%; height: 250px; border-radius: 16px; object-fit: cover; margin-top: auto; opacity: 0.9;
+        }
+
+        @media (max-width: 720px) {
+            .contact-form, .contact-info { padding: 32px 24px; }
+            .contact-header h1 { font-size: 2.5rem; }
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-    <main style="max-width: 1280px; margin: 0 auto; padding: 80px 24px; box-sizing: border-box;">
-        
-        <!-- Page Header -->
-        <header style="text-align: center; max-width: 600px; margin: 0 auto 60px;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 3.5rem; color: #292524; margin: 0 0 16px 0;">
-                Get in <i style="color: #D97706; font-style: italic;">touch</i>
-            </h1>
-            <p style="font-size: 1.1rem; color: #78716C; margin: 0; line-height: 1.6;">
-                Whether you're looking to adopt, volunteer, or just have a question, we'd love to hear from you.
-            </p>
+    <main class="contact-page">
+
+        <header class="contact-header">
+            <h1>Get in <i>touch</i></h1>
+            <p>Whether you're looking to adopt, volunteer, or just have a question, we'd love to hear from you.</p>
         </header>
 
-        <!-- Main Contact Layout -->
-        <div style="display: flex; flex-wrap: wrap; background: #FFFFFF; border-radius: 24px; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05); overflow: hidden;">
-            
-            <!-- Left: Contact Form -->
-            <div style="flex: 1 1 500px; padding: 60px; box-sizing: border-box;">
-                <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0 0 30px 0;">Send us a message</h3>
-                
-                <form action="/submit-contact" method="POST" style="margin: 0;">
-                    
-                    <div style="margin-bottom: 24px;">
-                        <label for="name" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Full Name</label>
-                        <input type="text" id="name" name="name" placeholder="Jane Doe" required 
-                               style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; box-sizing: border-box;">
+        <div class="contact-card">
+
+            <div class="contact-form">
+                <h2>Send us a message</h2>
+
+                {% if sent %}
+                <div class="notice notice--success" role="status">Thank you! Your message has been sent and we'll be in touch soon.</div>
+                {% endif %}
+                {% if errors %}
+                <div class="notice notice--error" role="alert">Please fix the highlighted fields and try again.</div>
+                {% endif %}
+
+                <form action="{{ url_for('submit_contact') }}" method="post">
+
+                    <div class="field{% if errors.name %} has-error{% endif %}">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Jane Doe" value="{{ form.name }}" maxlength="100" required autocomplete="name">
+                        {% if errors.name %}<p class="field__error">{{ errors.name }}</p>{% endif %}
                     </div>
 
-                    <div style="margin-bottom: 24px;">
-                        <label for="email" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="jane@example.com" required 
-                               style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; box-sizing: border-box;">
+                    <div class="field{% if errors.email %} has-error{% endif %}">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="jane@example.com" value="{{ form.email }}" maxlength="254" required autocomplete="email">
+                        {% if errors.email %}<p class="field__error">{{ errors.email }}</p>{% endif %}
                     </div>
 
-                    <div style="margin-bottom: 24px;">
-                        <label for="subject" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Subject</label>
-                        <select id="subject" name="subject" 
-                                style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; box-sizing: border-box;">
-                            <option value="adopt">I want to adopt a pet</option>
-                            <option value="volunteer">I want to volunteer</option>
-                            <option value="donate">Donation inquiry</option>
-                            <option value="other">Other</option>
+                    <div class="field{% if errors.subject %} has-error{% endif %}">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject">
+                            {% for value, label in subjects.items() %}
+                            <option value="{{ value }}"{% if value == form.subject %} selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
                         </select>
+                        {% if errors.subject %}<p class="field__error">{{ errors.subject }}</p>{% endif %}
                     </div>
 
-                    <div style="margin-bottom: 24px;">
-                        <label for="message" style="display: block; font-weight: 500; margin-bottom: 8px; color: #292524;">Your Message</label>
-                        <textarea id="message" name="message" placeholder="How can we help you today?" required 
-                                  style="width: 100%; padding: 16px 20px; background: #F5F5F4; border: 2px solid transparent; border-radius: 16px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #292524; outline: none; min-height: 150px; resize: vertical; box-sizing: border-box;"></textarea>
+                    <div class="field{% if errors.message %} has-error{% endif %}">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" placeholder="How can we help you today?" maxlength="{{ max_message }}" required>{{ form.message }}</textarea>
+                        {% if errors.message %}<p class="field__error">{{ errors.message }}</p>{% endif %}
                     </div>
 
-                    <button type="submit" 
-                            style="background: #D97706; color: white; border: none; padding: 16px 40px; border-radius: 50px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 10px;">
-                        Send Message
-                    </button>
+                    <button type="submit" class="btn-submit">Send Message</button>
                 </form>
             </div>
 
-            <!-- Right: Contact Information -->
-            <div style="flex: 1 1 400px; background: #292524; color: white; padding: 60px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+            <div class="contact-info">
                 <div>
-                    <div style="margin-bottom: 40px;">
-                        <h4 style="font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: #D97706; margin: 0 0 12px 0; font-weight: 600;">Visit Our Shelter</h4>
-                        <p style="font-size: 1.1rem; color: #E7E5E4; line-height: 1.8; margin: 0;">
+                    <div class="contact-info__block">
+                        <h3>Visit Our Shelter</h3>
+                        <p>
                             123 Rescue Road<br>
                             Compassion City, CA 90210
                         </p>
                     </div>
 
-                    <div style="margin-bottom: 40px;">
-                        <h4 style="font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: #D97706; margin: 0 0 12px 0; font-weight: 600;">Contact Details</h4>
-                        <p style="font-size: 1.1rem; color: #E7E5E4; line-height: 1.8; margin: 0;">
+                    <div class="contact-info__block">
+                        <h3>Contact Details</h3>
+                        <p>
                             hello@pawsandhomes.org<br>
                             +1 (555) 123-4567
                         </p>
                     </div>
 
-                    <div style="margin-bottom: 40px;">
-                        <h4 style="font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: #D97706; margin: 0 0 12px 0; font-weight: 600;">Adoption Hours</h4>
-                        <p style="font-size: 1.1rem; color: #E7E5E4; line-height: 1.8; margin: 0;">
+                    <div class="contact-info__block">
+                        <h3>Adoption Hours</h3>
+                        <p>
                             Monday - Friday: 10am - 6pm<br>
                             Saturday - Sunday: 9am - 4pm
                         </p>
                     </div>
                 </div>
 
-                <!-- Decorative Image -->
-                <img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?w=800&auto=format&fit=crop" alt="Happy dog looking up" 
-                     style="width: 100%; height: 250px; border-radius: 16px; object-fit: cover; margin-top: auto; opacity: 0.9;">
+                <img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?w=800&amp;auto=format&amp;fit=crop" alt="Happy dog looking up" loading="lazy">
             </div>
 
         </div>
 
     </main>
 {% endblock %}
-

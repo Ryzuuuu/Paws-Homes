@@ -1,10 +1,26 @@
 """Paws & Homes: a small pet-adoption website built with Flask."""
-from flask import Flask, abort, render_template, request
+import json
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+
+from flask import Flask, abort, redirect, render_template, request, url_for
 
 import pets
 
 app = Flask(__name__)
 app.add_template_global(pets.image_url)
+# Contact messages are appended to this file (one JSON object per line).
+app.config['MESSAGES_FILE'] = Path(app.instance_path) / 'messages.jsonl'
+
+SUBJECTS = {
+    'adopt': 'I want to adopt a pet',
+    'volunteer': 'I want to volunteer',
+    'donate': 'Donation inquiry',
+    'other': 'Other',
+}
+MAX_MESSAGE_LENGTH = 2000
+EMAIL_PATTERN = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
 
 
 def _selected(name, allowed):
@@ -23,9 +39,62 @@ def about():
     return render_template('about.html')
 
 
+def _render_contact(form, errors=None, sent=False, status=200):
+    return render_template('contact.html', form=form, errors=errors or {}, sent=sent,
+                           subjects=SUBJECTS, max_message=MAX_MESSAGE_LENGTH), status
+
+
+def validate_contact(form):
+    """Return a dict of field name -> error message (empty if the form is valid)."""
+    errors = {}
+    if not form['name']:
+        errors['name'] = 'Please enter your name.'
+    elif len(form['name']) > 100:
+        errors['name'] = 'Please keep your name under 100 characters.'
+    if not EMAIL_PATTERN.match(form['email']) or len(form['email']) > 254:
+        errors['email'] = 'Please enter a valid email address.'
+    if form['subject'] not in SUBJECTS:
+        errors['subject'] = 'Please choose a subject.'
+    if not form['message']:
+        errors['message'] = 'Please enter a message.'
+    elif len(form['message']) > MAX_MESSAGE_LENGTH:
+        errors['message'] = f'Please keep your message under {MAX_MESSAGE_LENGTH} characters.'
+    return errors
+
+
+def save_message(form):
+    """Append a contact message to the messages file."""
+    path = Path(app.config['MESSAGES_FILE'])
+    path.parent.mkdir(parents=True, exist_ok=True)
+    record = {'received': datetime.now(timezone.utc).isoformat(timespec='seconds'), **form}
+    with path.open('a', encoding='utf-8') as file:
+        file.write(json.dumps(record) + '\n')
+
+
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    form = {'name': '', 'email': '', 'subject': 'adopt', 'message': ''}
+    pet = pets.get_pet(request.args.get('pet', ''))
+    if pet:  # arriving from a pet page: pre-fill the enquiry
+        form['message'] = f"Hi, I'd like to know more about {pet['name']}."
+    return _render_contact(form, sent=request.args.get('sent') == '1')
+
+
+@app.post('/submit-contact')
+def submit_contact():
+    form = {field: request.form.get(field, '').strip()
+            for field in ('name', 'email', 'subject', 'message')}
+    errors = validate_contact(form)
+    if errors:
+        return _render_contact(form, errors, status=400)
+    try:
+        save_message(form)
+    except OSError:
+        app.logger.exception('Could not save contact message')
+        return _render_contact(
+            form, {'message': 'Sorry, we could not send your message. Please try again later.'},
+            status=500)
+    return redirect(url_for('contact', sent=1))
 
 
 @app.route('/adopt')
