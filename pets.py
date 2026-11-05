@@ -59,7 +59,7 @@ PETS = [
         "slug": "barnaby", "name": "Barnaby", "species": "dog", "breed": "Beagle",
         "age": "9 Years", "age_group": "senior", "size": "medium",
         "gender": "Male", "symbol": "♂", "badge": "Senior", "arrived": "2025-04-22",
-        "image": _PHOTO + "photo-1537151608804-ea2f1c305cbe",
+        "image": _PHOTO + "photo-1707298737261-069e2d529eaa",
         "bio": "Barnaby is a mellow senior who loves slow sniffy walks and a warm bed. "
                "He is ready to enjoy his golden years in a loving home.",
     },

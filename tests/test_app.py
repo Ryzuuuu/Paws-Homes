@@ -55,6 +55,12 @@ def test_pet_slugs_are_unique_and_use_valid_filter_values():
         assert pet["size"] in pets.SIZES
 
 
+def test_pet_photos_are_distinct_unsplash_urls():
+    images = [pet["image"] for pet in pets.PETS]
+    assert len(images) == len(set(images))
+    assert all(url.startswith("https://images.unsplash.com/photo-") for url in images)
+
+
 def test_search_filters_combine_with_and_within_group_or():
     cats = pets.search_pets(species=["cat"])
     assert cats and all(p["species"] == "cat" for p in cats)
