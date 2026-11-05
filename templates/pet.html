@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Paws &amp; Homes | Meet {{ pet.name }}{% endblock %}
+
+{% block head %}
+    <style>
+        .pet-page { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+        .back-link { color: #78716C; text-decoration: none; font-weight: 500; }
+        .back-link:hover { color: #D97706; }
+        .pet-layout { display: flex; flex-wrap: wrap; gap: 48px; margin-top: 32px; align-items: flex-start; }
+        .pet-layout img {
+            flex: 1 1 420px; min-width: 0; max-width: 100%; height: 520px; object-fit: cover;
+            border-radius: 32px; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+        }
+        .pet-info { flex: 1 1 380px; }
+        .pet-info__badge {
+            display: inline-block; padding: 6px 14px; border-radius: 50px; background: #F5F5F4;
+            font-size: 0.85rem; font-weight: 600; color: #292524; margin-bottom: 16px;
+        }
+        .pet-info__badge.is-highlight { color: #D97706; background: #FEF3C7; }
+        .pet-info h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; line-height: 1.1; margin: 0 0 24px; }
+        .pet-facts { display: grid; grid-template-columns: max-content 1fr; gap: 10px 32px; margin: 0 0 24px; }
+        .pet-facts dt { color: #78716C; font-weight: 500; }
+        .pet-facts dd { margin: 0; font-weight: 600; }
+        .pet-bio { color: #57534E; font-size: 1.1rem; line-height: 1.8; margin: 0 0 32px; }
+        .btn-primary {
+            display: inline-block; background: #D97706; color: white; text-decoration: none;
+            padding: 16px 40px; border-radius: 50px; font-weight: 600; transition: background 0.3s;
+        }
+        .btn-primary:hover { background: #B45309; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <main class="pet-page">
+        <a class="back-link" href="{{ url_for('adopt') }}">&larr; All pets</a>
+
+        <div class="pet-layout">
+            <img src="{{ image_url(pet, 1000) }}" alt="{{ pet.name }}, {{ pet.breed }}">
+
+            <section class="pet-info">
+                {% if pet.badge %}<span class="pet-info__badge{% if pet.highlight %} is-highlight{% endif %}">{{ pet.badge }}</span>{% endif %}
+                <h1>{{ pet.name }}</h1>
+
+                <dl class="pet-facts">
+                    <dt>Species</dt><dd>{{ pet.species|capitalize }}</dd>
+                    <dt>Breed</dt><dd>{{ pet.breed }}</dd>
+                    <dt>Age</dt><dd>{{ pet.age }}</dd>
+                    <dt>Size</dt><dd>{{ pet.size|capitalize }}</dd>
+                    <dt>Gender</dt><dd>{{ pet.gender }}</dd>
+                </dl>
+
+                <p class="pet-bio">{{ pet.bio }}</p>
+
+                <a class="btn-primary" href="{{ url_for('contact', pet=pet.slug) }}">Ask about {{ pet.name }}</a>
+            </section>
+        </div>
+    </main>
+{% endblock %}

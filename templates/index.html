@@ -239,24 +239,25 @@
                 <h1 class="hero-title">Find a friend <br><i>for life.</i></h1>
                 <p class="hero-subtitle">Experience the joy of pet adoption. We rescue, rehabilitate, and rehome the most wonderful companions waiting to meet you.</p>
                 
-                <div class="filter-dock">
-                    <select>
-                        <option value="any">Any Species</option>
-                        <option value="dog">Dogs</option>
-                        <option value="cat">Cats</option>
+                <form class="filter-dock" method="get" action="{{ url_for('adopt') }}">
+                    <select name="species" aria-label="Species">
+                        <option value="">Any Species</option>
+                        {% for value, label in species.items() %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
                     </select>
-                    <select>
-                        <option value="any">Any Age</option>
-                        <option value="baby">Puppy / Kitten</option>
-                        <option value="adult">Adult</option>
-                        <option value="senior">Senior</option>
+                    <select name="age" aria-label="Age">
+                        <option value="">Any Age</option>
+                        {% for value, label in age_groups.items() %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
                     </select>
-                    <button class="btn-primary">Search Pets</button>
-                </div>
+                    <button type="submit" class="btn-primary">Search Pets</button>
+                </form>
             </div>
             
             <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1000&auto=format&fit=crop" alt="Happy dog with owner">
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1000&amp;auto=format&amp;fit=crop" alt="Happy dog with owner">
             </div>
         </section>
 
@@ -264,68 +265,29 @@
         <section>
             <div class="section-header">
                 <h2>Waiting for you</h2>
-                <a href="/all-pets" class="view-all">View all companions &rarr;</a>
+                <a href="{{ url_for('adopt') }}" class="view-all">View all companions &rarr;</a>
             </div>
             
             <div class="pet-grid">
-                
-                <!-- Card 1 -->
-                <a href="/adopt/hazel" class="pet-card">
+                {% for pet in featured %}
+                <a href="{{ url_for('pet_detail', slug=pet.slug) }}" class="pet-card">
                     <div class="card-img-wrapper">
-                        <div class="pill-overlay">Puppy</div>
-                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop" alt="Hazel the rescue dog">
+                        {% if pet.badge %}<div class="pill-overlay"{% if pet.highlight %} style="color: var(--accent);"{% endif %}>{{ pet.badge }}</div>{% endif %}
+                        <img src="{{ image_url(pet, 800) }}" alt="{{ pet.name }}, {{ pet.breed }}" loading="lazy">
                     </div>
                     <div class="card-info">
                         <div class="pet-name-row">
-                            <h3>Hazel</h3>
+                            <h3>{{ pet.name }}</h3>
                             <span class="pet-price">Adopt</span>
                         </div>
                         <div class="pet-meta">
-                            <span>Female</span>
-                            <span>Spaniel Mix</span>
-                            <span>3 Months</span>
+                            <span>{{ pet.gender }}</span>
+                            <span>{{ pet.breed }}</span>
+                            <span>{{ pet.age }}</span>
                         </div>
                     </div>
                 </a>
-
-                <!-- Card 2 -->
-                <a href="/adopt/winston" class="pet-card">
-                    <div class="card-img-wrapper">
-                        <div class="pill-overlay">Bonded Pair</div>
-                        <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=800&auto=format&fit=crop" alt="Winston the cat">
-                    </div>
-                    <div class="card-info">
-                        <div class="pet-name-row">
-                            <h3>Winston</h3>
-                            <span class="pet-price">Adopt</span>
-                        </div>
-                        <div class="pet-meta">
-                            <span>Male</span>
-                            <span>British Shorthair</span>
-                            <span>2 Years</span>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Card 3 -->
-                <a href="/adopt/charlie" class="pet-card">
-                    <div class="card-img-wrapper">
-                        <div class="pill-overlay" style="color: var(--accent);">Special Needs</div>
-                        <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?w=800&auto=format&fit=crop" alt="Charlie the dog">
-                    </div>
-                    <div class="card-info">
-                        <div class="pet-name-row">
-                            <h3>Charlie</h3>
-                            <span class="pet-price">Adopt</span>
-                        </div>
-                        <div class="pet-meta">
-                            <span>Male</span>
-                            <span>Labrador Retriever</span>
-                            <span>6 Years</span>
-                        </div>
-                    </div>
-                </a>
-
+                {% endfor %}
             </div>
         </section>
     </div>

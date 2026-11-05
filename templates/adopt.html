@@ -1,175 +1,150 @@
 {% extends "base.html" %}
 {% block title %}Paws &amp; Homes | Meet Our Pets{% endblock %}
 
+{% block head %}
+    <style>
+        .adopt-header { background-color: #292524; color: white; padding: 60px 24px; text-align: center; }
+        .adopt-header h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin: 0 0 16px 0; }
+        .adopt-header h1 i { color: #D97706; font-style: italic; }
+        .adopt-header p { font-size: 1.1rem; color: #E7E5E4; max-width: 600px; margin: 0 auto; }
+
+        .adopt-layout {
+            max-width: 1400px; margin: 0 auto; padding: 60px 24px; box-sizing: border-box;
+            display: flex; flex-wrap: wrap; gap: 40px;
+        }
+
+        /* Filter sidebar */
+        .filters {
+            flex: 1 1 280px; max-width: 320px; background: #FFFFFF; padding: 32px; border-radius: 24px;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05); height: fit-content; box-sizing: border-box;
+        }
+        .filters h2 {
+            font-family: 'Playfair Display', serif; font-size: 1.5rem; margin: 0 0 24px 0;
+            border-bottom: 1px solid #E7E5E4; padding-bottom: 16px;
+        }
+        .filter-group { border: 0; margin: 0 0 24px 0; padding: 0; }
+        .filter-group legend {
+            padding: 0; margin-bottom: 12px; font-size: 0.9rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; color: #78716C;
+        }
+        .filter-group label { display: block; margin-bottom: 8px; cursor: pointer; }
+        .filter-group input { accent-color: #D97706; margin-right: 8px; }
+        .filters__actions { display: flex; flex-direction: column; gap: 8px; }
+        .btn-apply, .btn-clear {
+            display: block; width: 100%; padding: 12px; border: none; border-radius: 8px; box-sizing: border-box;
+            font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; text-align: center;
+            text-decoration: none; cursor: pointer;
+        }
+        .btn-apply { background: #D97706; color: white; }
+        .btn-apply:hover { background: #B45309; }
+        .btn-clear { background: #F5F5F4; color: #292524; }
+        .btn-clear:hover { background: #E7E5E4; }
+
+        /* Results */
+        .results { flex: 3 1 800px; }
+        .results__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+        .results__count { margin: 0; color: #78716C; font-weight: 500; }
+        .results__sort {
+            padding: 10px 16px; border-radius: 50px; border: 1px solid #E7E5E4; background: #FFFFFF;
+            font-family: 'Inter', sans-serif; cursor: pointer;
+        }
+        .pet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 32px; }
+        .empty { background: #FFFFFF; border-radius: 24px; padding: 60px 24px; text-align: center; color: #78716C; }
+        .empty a { color: #D97706; font-weight: 600; }
+
+        /* Pet card */
+        .pet-card {
+            background: #FFFFFF; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+        }
+        .pet-card__media { position: relative; height: 280px; padding: 12px; box-sizing: border-box; }
+        .pet-card__media img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
+        .pet-card__badge {
+            position: absolute; top: 24px; left: 24px; z-index: 10; padding: 6px 14px; border-radius: 50px;
+            background: rgba(255,255,255,0.9); font-size: 0.8rem; font-weight: 600; color: #292524;
+        }
+        .pet-card__badge.is-highlight { color: #D97706; }
+        .pet-card__body { padding: 8px 24px 24px; }
+        .pet-card__body h3 {
+            font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0;
+            display: flex; justify-content: space-between;
+        }
+        .pet-card__sex { color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif; }
+        .pet-card__meta { color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0; }
+        .pet-card__link {
+            display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none;
+            padding: 12px; border-radius: 12px; font-weight: 600; transition: background 0.3s;
+        }
+        .pet-card__link:hover { background: #E7E5E4; }
+
+        @media (max-width: 720px) {
+            .adopt-header h1 { font-size: 2.5rem; }
+            .filters { max-width: none; }
+        }
+    </style>
+{% endblock %}
+
+{% macro filter_group(title, name, options, counts, chosen) %}
+    <fieldset class="filter-group">
+        <legend>{{ title }}</legend>
+        {% for value, label in options.items() %}
+        <label><input type="checkbox" name="{{ name }}" value="{{ value }}"{% if value in chosen %} checked{% endif %}> {{ label }} ({{ counts.get(value, 0) }})</label>
+        {% endfor %}
+    </fieldset>
+{% endmacro %}
+
 {% block content %}
-    <header style="background-color: #292524; color: white; padding: 60px 24px; text-align: center;">
-        <h1 style="font-family: 'Playfair Display', serif; font-size: 3.5rem; margin: 0 0 16px 0;">
-            Find Your <i style="color: #D97706; font-style: italic;">Companion</i>
-        </h1>
-        <p style="font-size: 1.1rem; color: #E7E5E4; margin: 0; max-width: 600px; margin: 0 auto;">
-            Browse our extensive family of over 100 rescues waiting for their forever homes. Use the filters to find the perfect match for your lifestyle.
-        </p>
+    <header class="adopt-header">
+        <h1>Find Your <i>Companion</i></h1>
+        <p>Browse the rescues waiting for their forever homes. Use the filters to find the perfect match for your lifestyle.</p>
     </header>
 
-    <main style="max-width: 1400px; margin: 0 auto; padding: 60px 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 40px;">
-        
-        <aside style="flex: 1 1 280px; max-width: 320px; background: #FFFFFF; padding: 32px; border-radius: 24px; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05); height: fit-content; box-sizing: border-box;">
-            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin: 0 0 24px 0; border-bottom: 1px solid #E7E5E4; padding-bottom: 16px;">Filter Pets</h3>
-            
-            <div style="margin-bottom: 24px;">
-                <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #78716C; margin: 0 0 12px 0;">Species</h4>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" checked style="accent-color: #D97706; margin-right: 8px;"> Dogs (64)</label>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" checked style="accent-color: #D97706; margin-right: 8px;"> Cats (42)</label>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Small Pets (12)</label>
-            </div>
+    <main class="adopt-layout">
 
-            <div style="margin-bottom: 24px;">
-                <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #78716C; margin: 0 0 12px 0;">Age</h4>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Baby / Puppy (28)</label>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Young (45)</label>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Adult (30)</label>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Senior (15)</label>
-            </div>
-
-            <div style="margin-bottom: 24px;">
-                <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #78716C; margin: 0 0 12px 0;">Size</h4>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Small (0-25 lbs)</label>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Medium (26-60 lbs)</label>
-                <label style="display: block; margin-bottom: 8px; cursor: pointer;"><input type="checkbox" style="accent-color: #D97706; margin-right: 8px;"> Large (61-100 lbs)</label>
-            </div>
-
-            <button style="width: 100%; padding: 12px; background: #F5F5F4; border: none; border-radius: 8px; font-weight: 600; color: #292524; cursor: pointer; font-family: 'Inter', sans-serif;">Clear Filters</button>
+        <aside class="filters">
+            <h2>Filter Pets</h2>
+            <form id="filters" method="get" action="{{ url_for('adopt') }}">
+                {{ filter_group('Species', 'species', species, species_counts, selected.species) }}
+                {{ filter_group('Age', 'age', age_groups, age_counts, selected.age) }}
+                {{ filter_group('Size', 'size', sizes, size_counts, selected.size) }}
+                <div class="filters__actions">
+                    <button type="submit" class="btn-apply">Apply Filters</button>
+                    <a class="btn-clear" href="{{ url_for('adopt') }}">Clear Filters</a>
+                </div>
+            </form>
         </aside>
 
-        <div style="flex: 3 1 800px;">
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <p style="margin: 0; color: #78716C; font-weight: 500;">Showing 1-9 of 118 pets</p>
-                <select style="padding: 10px 16px; border-radius: 50px; border: 1px solid #E7E5E4; background: #FFFFFF; font-family: 'Inter', sans-serif; outline: none; cursor: pointer;">
-                    <option>Sort by: Newest Arrival</option>
-                    <option>Sort by: Oldest Arrival</option>
-                    <option>Sort by: Name (A-Z)</option>
+        <div class="results">
+            <div class="results__bar">
+                <p class="results__count">Showing {{ pets|length }} of {{ total }} pets</p>
+                <select class="results__sort" name="sort" form="filters" aria-label="Sort pets" onchange="this.form.requestSubmit()">
+                    {% for value, label in sorts.items() %}
+                    <option value="{{ value }}"{% if value == sort %} selected{% endif %}>Sort by: {{ label }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 32px;">
-                
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <div style="position: absolute; top: 24px; left: 24px; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #292524; z-index: 10;">Puppy</div>
-                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            {% if pets %}
+            <div class="pet-grid">
+                {% for pet in pets %}
+                <article class="pet-card">
+                    <div class="pet-card__media">
+                        {% if pet.badge %}<span class="pet-card__badge{% if pet.highlight %} is-highlight{% endif %}">{{ pet.badge }}</span>{% endif %}
+                        <img src="{{ image_url(pet, 600) }}" alt="{{ pet.name }}, {{ pet.breed }}" loading="lazy">
                     </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Hazel <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♀</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Spaniel Mix • 3 Months • Medium</p>
-                        <a href="/adopt/hazel" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600; transition: background 0.3s;">Meet Hazel</a>
+                    <div class="pet-card__body">
+                        <h3>{{ pet.name }} <span class="pet-card__sex" title="{{ pet.gender }}">{{ pet.symbol }}</span></h3>
+                        <p class="pet-card__meta">{{ pet.breed }} &bull; {{ pet.age }} &bull; {{ pet.size|capitalize }}</p>
+                        <a class="pet-card__link" href="{{ url_for('pet_detail', slug=pet.slug) }}">Meet {{ pet.name }}</a>
                     </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <div style="position: absolute; top: 24px; left: 24px; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #292524; z-index: 10;">Adult</div>
-                        <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Winston <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♂</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">British Shorthair • 4 Years • Medium</p>
-                        <a href="/adopt/winston" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Winston</a>
-                    </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <div style="position: absolute; top: 24px; left: 24px; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #D97706; z-index: 10;">Special Needs</div>
-                        <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Charlie <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♂</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Labrador Mix • 6 Years • Large</p>
-                        <a href="/adopt/charlie" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Charlie</a>
-                    </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Luna <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♀</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Domestic Shorthair • 1 Year • Small</p>
-                        <a href="/adopt/luna" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Luna</a>
-                    </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <div style="position: absolute; top: 24px; left: 24px; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #292524; z-index: 10;">Senior</div>
-                        <img src="https://images.unsplash.com/photo-1537151608804-ea2f1c305cbe?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Barnaby <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♂</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Beagle • 9 Years • Medium</p>
-                        <a href="/adopt/barnaby" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Barnaby</a>
-                    </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <div style="position: absolute; top: 24px; left: 24px; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #D97706; z-index: 10;">Bonded Pair</div>
-                        <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Milo & Otis <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♂♂</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Orange Tabbies • 2 Years • Small</p>
-                        <a href="/adopt/milo-otis" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Milo & Otis</a>
-                    </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Daisy <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♀</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Golden Retriever • 3 Years • Large</p>
-                        <a href="/adopt/daisy" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Daisy</a>
-                    </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <img src="https://images.unsplash.com/photo-1511044568932-338cba0ad803?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Sylvester <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♂</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Tuxedo Cat • 5 Years • Medium</p>
-                        <a href="/adopt/sylvester" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Sylvester</a>
-                    </div>
-                </div>
-
-                <div style="background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); display: flex; flex-direction: column;">
-                    <div style="position: relative; height: 280px; padding: 12px; box-sizing: border-box;">
-                        <div style="position: absolute; top: 24px; left: 24px; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #292524; z-index: 10;">Puppy</div>
-                        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
-                    </div>
-                    <div style="padding: 8px 24px 24px;">
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #292524; margin: 0 0 8px 0; display: flex; justify-content: space-between;">Buster <span style="color: #D97706; font-size: 1.1rem; font-family: 'Inter', sans-serif;">♂</span></h3>
-                        <p style="color: #78716C; font-size: 0.9rem; margin: 0 0 16px 0;">Terrier Mix • 6 Months • Small</p>
-                        <a href="/adopt/buster" style="display: block; text-align: center; background: #F5F5F4; color: #292524; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 600;">Meet Buster</a>
-                    </div>
-                </div>
-
+                </article>
+                {% endfor %}
             </div>
-
-            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 60px;">
-                <a href="#" style="padding: 12px 20px; background: #292524; color: white; text-decoration: none; border-radius: 12px; font-weight: 600;">1</a>
-                <a href="#" style="padding: 12px 20px; background: #FFFFFF; color: #292524; text-decoration: none; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">2</a>
-                <a href="#" style="padding: 12px 20px; background: #FFFFFF; color: #292524; text-decoration: none; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">3</a>
-                <span style="padding: 12px 10px; color: #78716C; font-weight: 600;">...</span>
-                <a href="#" style="padding: 12px 20px; background: #FFFFFF; color: #292524; text-decoration: none; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">14</a>
-                <a href="#" style="padding: 12px 20px; background: #FFFFFF; color: #292524; text-decoration: none; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">Next &rarr;</a>
+            {% else %}
+            <div class="empty">
+                <p>No pets match those filters. <a href="{{ url_for('adopt') }}">Clear filters</a> to see everyone.</p>
             </div>
-
+            {% endif %}
         </div>
 
     </main>
